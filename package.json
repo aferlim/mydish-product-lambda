@@ -1,0 +1,16 @@
+{
+  "name": "product-api",
+  "version": "1.0.0",
+  "description": "mydish products",
+  "main": "index.js",
+  "author": "andre lima",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.27.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4"
+  },
+  "dependencies": {
+    "node-input-validator": "^4.4.1"
+  }
+}

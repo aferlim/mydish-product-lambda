@@ -1,0 +1,25 @@
+env:
+  es6: true
+  node: true
+extends: "eslint:recommended"
+parserOptions:
+  sourceType: module
+  ecmaVersion: 9
+rules:
+  indent:
+    - error
+    - tab
+  linebreak-style:
+    - 0
+    - error
+    - windows
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - never
+  no-console:
+    - off
+globals:
+  context: true
