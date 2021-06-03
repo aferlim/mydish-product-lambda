@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk')
 const { product } = require('./index')
 
-const { badRequest, ok, badRequestWithMessage } = require('../response')
+const { badRequest, ok, badRequestWithMessage, notFound } = require('../response')
 
 jest.mock('aws-sdk', () => {
 
@@ -40,6 +40,13 @@ jest.mock('aws-sdk', () => {
 					return Promise.resolve([ {id: '1' } ])
 				}
 			}
+		}), 
+		delete: jest.fn().mockImplementation(() => {
+			return {
+				promise() {
+					return Promise.resolve(true)
+				}
+			}
 		})
 	}
 	const mDynamoDB = { DocumentClient: jest.fn(() => mDocumentClient) }
@@ -50,7 +57,7 @@ const mDynamoDb = new AWS.DynamoDB.DocumentClient()
 
 describe('Product Suite', () => {
 
-	beforeAll(() => { console.log = jest.fn() })
+	//beforeAll(() => { console.log = jest.fn() })
 
 	afterAll(() => {
 		jest.resetAllMocks()
@@ -109,6 +116,17 @@ describe('Product Suite', () => {
 		expect(result.statusCode).toBe(400)
 	})
 
+	test('Should_returns_notfoud_one_by_external', async () => {
+
+		mDynamoDb.get = jest.fn().mockImplementation(() => ({ promise: () => (Promise.resolve({})) }))
+
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2, extern_id: 2 } }
+
+		let result = await product(request)
+
+		expect(result.statusCode).toBe(404)
+	})
+
 	test('Should_returns_ok_one_by_terminal', async () => {
 
 		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2 } }
@@ -139,7 +157,7 @@ describe('Product Suite', () => {
 
 		let result = await product(request)
 
-		expect(result).toStrictEqual(badRequestWithMessage({ error: 'invalid request, products=array, query=terminal_id'}))
+		expect(result).toStrictEqual(badRequestWithMessage({ error: 'missing/wrong parameters'}))
 		expect(result.statusCode).toBe(400)
 	})
 
@@ -155,7 +173,7 @@ describe('Product Suite', () => {
 
 		let result = await product(request)
 
-		expect(result).toStrictEqual(badRequestWithMessage({ error: 'invalid request, products=array, query=terminal_id'}))
+		expect(result).toStrictEqual(badRequestWithMessage({ error: 'missing/wrong parameters'}))
 		expect(result.statusCode).toBe(400)
 	})
 
@@ -182,6 +200,32 @@ describe('Product Suite', () => {
 	})
 
 	test('Should_returns_ok_creating_all', async () => {
+
+		mDynamoDb.get = jest.fn().mockImplementation(() => ({ promise: () => ( Promise.resolve({}) ) }))
+
+		let arr = [ {
+			extern_id: '3333',
+			stock: 4,
+			price: 89,
+			name: 'Pizza 4 Queijos'
+		},{
+			extern_id: '4444',
+			stock: 4,
+			price: 89,
+			name: 'Pizza 4 Queijos'
+		}]
+
+		const request = { httpMethod: 'POST', queryStringParameters: { terminal_id: '222' }, body: JSON.stringify(arr) }
+
+		let result = await product(request)
+
+		expect(JSON.parse(result.body).errors.length).toBe(0)
+		expect(JSON.parse(result.body).created.length).toBe(2)
+		expect(JSON.parse(result.body).status).toBe('success')
+		expect(result.statusCode).toBe(200)
+	})
+
+	test('Should_returns_ok_updating_all', async () => {
 
 		mDynamoDb.get = jest.fn().mockImplementation(() => {
 			return {
@@ -213,8 +257,78 @@ describe('Product Suite', () => {
 		let result = await product(request)
 
 		expect(JSON.parse(result.body).errors.length).toBe(0)
-		expect(JSON.parse(result.body).success.length).toBe(2)
+		expect(JSON.parse(result.body).updated.length).toBe(2)
 		expect(JSON.parse(result.body).status).toBe('success')
 		expect(result.statusCode).toBe(200)
 	})
+
+	test('Should_returns_a_badrequest_delete_wrong_parameters', async () => {
+
+		const request = { httpMethod: 'DELETE', queryStringParameters: { terminal_id: '222' } }
+
+		let result = await product(request)
+
+		expect(result).toStrictEqual(badRequestWithMessage({ error: 'missing/wrong parameters'}))
+		expect(result.statusCode).toBe(400)
+	})
+
+	test('Should_returns_ok_delete', async () => {
+
+		mDynamoDb.get = jest.fn().mockImplementation(() => {
+			return {
+				promise() {
+					return Promise.resolve({
+						extern_id: '222',
+						stock: 4,
+						price: 89,
+						name: 'Pizza 4 Queijos'
+					})
+				}
+			}
+		})
+
+		const request = { httpMethod: 'DELETE', queryStringParameters: { terminal_id: '222', extern_id: '222' } }
+
+		let result = await product(request)
+
+		expect(result.statusCode).toBe(200)
+	})
+
+	test('Should_returns_notfound_delete', async () => {
+
+		mDynamoDb.get = jest.fn().mockImplementation(() => ({ promise: () => ( Promise.resolve({}) ) }))
+
+		const request = { httpMethod: 'DELETE', queryStringParameters: { terminal_id: '222', extern_id: '222' } }
+
+		let result = await product(request)
+
+		expect(result).toStrictEqual(notFound())
+		expect(result.statusCode).toBe(404)
+	})
+
+	test('Should_returns_badrequest_delete_dynamo_error', async () => {
+
+		mDynamoDb.get = jest.fn().mockImplementation(() => {
+			return {
+				promise() {
+					return Promise.resolve({
+						extern_id: '222',
+						stock: 4,
+						price: 89,
+						name: 'Pizza 4 Queijos'
+					})
+				}
+			}
+		})
+		
+		mDynamoDb.delete = jest.fn().mockImplementation(() => ({ }))
+
+		const request = { httpMethod: 'DELETE', queryStringParameters: { terminal_id: '222', extern_id: '222' } }
+
+		let result = await product(request)
+
+		expect(result).toStrictEqual(badRequest())
+		expect(result.statusCode).toBe(400)
+	})
+
 })

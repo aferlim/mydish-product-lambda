@@ -1,16 +1,17 @@
 
-const { get, post } = require('./handler')
+const { get, post, delete_r } = require('./handler')
 
 const product = async event =>{
 
 	switch (event.httpMethod) {
 	case 'GET':
-		return get(event.queryStringParameters)
+		return await get(event.queryStringParameters)
 		// 	break
 	case 'POST':
-		return post(event)
+		return await post(event)
 		// 	break
-		// case 'DELETE':
+	case 'DELETE':
+		return await delete_r(event.queryStringParameters)
 		// 	break
 		// case 'OPTIONS':
 		// 	break

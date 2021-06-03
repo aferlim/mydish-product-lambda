@@ -66,10 +66,26 @@ const insert = async product => {
 const update = async product => {
 	if (await validate(product)) {
 		try {
-			await dynamoDb.update(setUpdateProduct(product)).promise()
+			await dynamoDb.update(setUpdateProduct(TABLE_NAME, product)).promise()
 		} catch (error) {
 			throw errorF(`update - ${error.message}`)
 		}
+	}
+}
+
+const remove = async (extern_id, terminal_id) => {
+	const removeParams = {
+		TableName : TABLE_NAME,
+		Key:{
+			'extern_id': extern_id,
+			'terminal_id': terminal_id
+		}
+	}
+
+	try {
+		await dynamoDb.delete(removeParams).promise()
+	} catch (error) {
+		throw errorF(`delete - ${error.message}`)
 	}
 }
 
@@ -78,5 +94,6 @@ module.exports = {
 	getByTerminalId, 
 	getByExternId, 
 	insert, 
-	update
+	update,
+	remove
 }

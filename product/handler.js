@@ -1,5 +1,5 @@
-const {notFound, ok, badRequest, badRequestWithMessage } = require('../response')
-const { getAll, getByExternId, getByTerminalId, insert, update } = require('./service')
+const { notFound, ok, badRequest, badRequestWithMessage } = require('../response')
+const { getAll, getByExternId, getByTerminalId, insert, update, remove } = require('./service')
 
 const { validate } = require('./schema')
 
@@ -8,14 +8,14 @@ const get = async query => {
 	if(query && query.terminal_id){
 
 		if(query.extern_id){
-			return await genericHandler({ ...query })(getByExternId)
+			return await genericReadHandler({ ...query })(getByExternId)
 		}
 
-		return await genericHandler({ ...query })(getByTerminalId)
+		return await genericReadHandler({ ...query })(getByTerminalId)
 	}
 
 	if(query && query.type && query.type === 'all') {
-		return await genericHandler()(getAll)
+		return await genericReadHandler()(getAll)
 	}
 
 	return notFound()
@@ -24,29 +24,33 @@ const get = async query => {
 const post = async ({ body, queryStringParameters  }) => {
 	
 	const { terminal_id } = queryStringParameters
-	const products = JSON.parse(body)
+	const products = body ? JSON.parse(body) : null
 
-	if (!Array.isArray(products) || !terminal_id) {
-		return badRequestWithMessage({ error: 'invalid request, products=array, query=terminal_id'})
+	if (!products || !Array.isArray(products) || !terminal_id) {
+		return badRequestWithMessage({ error: 'missing/wrong parameters'})
 	}
 
-	let response_body = { status: 'sucess', success: [], errors: []}
+	let response_body = { status: null, created: [], updated: [], errors: [] }
 
 	await Promise.all(products.map(async prod_item => {
 		try {
-			
 			prod_item.terminal_id = terminal_id
 
 			if(await validate(prod_item)) {
 				
-				let exists = getByExternId({ terminal_id: terminal_id, extern_id: prod_item.extern_id })
+				let exists = await getByExternId({ terminal_id: terminal_id, extern_id: prod_item.extern_id })
 
-				if (await exists) {
+				if (exists && Object.keys(exists).length) {
+
 					await update(prod_item)
+					response_body.updated.push(prod_item)
+
 				} else {
+
 					await insert(prod_item)
+					response_body.created.push(prod_item)
+
 				}
-				response_body.success.push(prod_item)
 			}
 		} catch (error) {
 			console.log(error)
@@ -54,20 +58,22 @@ const post = async ({ body, queryStringParameters  }) => {
 		}
 	}))
 
-	const status = response_body.success.length ? response_body.errors.length ? 'processed with errors' : 'success' : 'error'
+	const status = (response_body.created.length || response_body.updated.length) ? response_body.errors.length ? 'processed with errors' : 'success' : 'error'
 
 	if(status == 'error')
 		return badRequest()
 
-	return ok({ status: status, ...response_body})
+	return ok({ ...response_body, status: status })
 }
 
-const genericHandler = params => async delegate => {
+const genericReadHandler = params => async delegate => {
 	try {
 		if(params){
-			return ok(await delegate(params))
+			let result = await delegate(params)
+			return result && Object.keys(result).length ? ok(result) : notFound()
 		}else{
-			return ok(await delegate())
+			let result = await delegate()
+			return result && Object.keys(result).length ? ok(result) : notFound()
 		}
 	} catch (error) {
 		console.log(error)
@@ -75,4 +81,23 @@ const genericHandler = params => async delegate => {
 	}
 }
 
-module.exports = { get, post }
+const delete_r = async ({ terminal_id, extern_id }) => {
+	if (!extern_id || !terminal_id) {
+		return badRequestWithMessage({ error: 'missing/wrong parameters'})
+	}
+
+	try {
+		let exists = await getByExternId({ terminal_id: terminal_id, extern_id: extern_id })
+
+		if (exists && Object.keys(exists).length) {
+			return ok(await remove(terminal_id, extern_id))
+		} else {
+			return notFound()
+		}
+	} catch (error) {
+		console.log(error)
+		return badRequest()
+	}
+}
+
+module.exports = { get, post, remove, delete_r }
