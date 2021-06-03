@@ -1,20 +1,23 @@
 
-const AWS = require('aws-sdk')
-const { ok, badRequestWithMessage } = require('../response')
+const { get, post } = require('./handler')
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient()
-const TABLENAME = 'product'
+const product = async event =>{
 
-const getAll = async () => {
-	try {
-		return ok(await dynamoDb.scan({ TableName: TABLENAME }).promise())    
-	} catch (error) {
-		return badRequestWithMessage({error: error.message})
+	switch (event.httpMethod) {
+	case 'GET':
+		return get(event.queryStringParameters)
+		// 	break
+	case 'POST':
+		return post(event)
+		// 	break
+		// case 'DELETE':
+		// 	break
+		// case 'OPTIONS':
+		// 	break
+		// default:
+		// 	break
 	}
+
 }
 
-// const getById = id => {
-
-// }
-
-module.exports = { getAll }
+module.exports = { product }

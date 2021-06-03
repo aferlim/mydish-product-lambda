@@ -5,12 +5,18 @@
   "main": "index.js",
   "author": "andre lima",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
     "eslint": "^7.27.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.23.4"
+    "eslint-plugin-import": "^2.23.4",
+    "jest": "^27.0.3"
   },
   "dependencies": {
+    "aws-sdk": "^2.919.0",
+    "error-factory": "^0.1.6",
     "node-input-validator": "^4.4.1"
   }
 }
