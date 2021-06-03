@@ -7,7 +7,7 @@ const get = async query => {
 
 	if(query && query.terminal_id){
 
-		if(query.external_id){
+		if(query.extern_id){
 			return await genericHandler({ ...query })(getByExternId)
 		}
 
@@ -39,9 +39,9 @@ const post = async ({ body, queryStringParameters  }) => {
 
 			if(await validate(prod_item)) {
 				
-				let exists = getByExternId({ terminal_id: terminal_id, external_id: prod_item.external_id })
+				let exists = getByExternId({ terminal_id: terminal_id, extern_id: prod_item.extern_id })
 
-				if (exists) {
+				if (await exists) {
 					await update(prod_item)
 				} else {
 					await insert(prod_item)

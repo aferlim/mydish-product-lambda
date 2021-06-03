@@ -12,7 +12,7 @@ jest.mock('aws-sdk', () => {
 					return Promise.resolve({id: '1' })
 				}
 			}
-		}), 
+		}),
 		scan: jest.fn().mockImplementation(() => {
 			return {
 				promise() {
@@ -21,6 +21,20 @@ jest.mock('aws-sdk', () => {
 			}
 		}), 
 		query: jest.fn().mockImplementation(() => {
+			return {
+				promise() {
+					return Promise.resolve([ {id: '1' } ])
+				}
+			}
+		}), 
+		put: jest.fn().mockImplementation(() => {
+			return {
+				promise() {
+					return Promise.resolve([ {id: '1' } ])
+				}
+			}
+		}), 
+		update: jest.fn().mockImplementation(() => {
 			return {
 				promise() {
 					return Promise.resolve([ {id: '1' } ])
@@ -50,7 +64,7 @@ describe('Product Suite', () => {
 		expect(result.statusCode).toBe(404)
 	})
 
-	test('Should_returns_all_products', async () => {
+	test('Should_returns_ok_all_products', async () => {
 
 		const request = { httpMethod: 'GET', queryStringParameters: {type: 'all'} }
 
@@ -71,9 +85,9 @@ describe('Product Suite', () => {
 		expect(result.statusCode).toBe(400)
 	})
 
-	test('Should_returns_one_by_external', async () => {
+	test('Should_returns_ok_one_by_external', async () => {
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2, external_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2, extern_id: 2 } }
 
 		let result = await product(request)
 
@@ -87,7 +101,7 @@ describe('Product Suite', () => {
 
 		mDynamoDb.get.mockReturnValue(null)
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2, external_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2, extern_id: 2 } }
 
 		let result = await product(request)
 
@@ -95,7 +109,7 @@ describe('Product Suite', () => {
 		expect(result.statusCode).toBe(400)
 	})
 
-	test('Should_returns_one_by_terminal', async () => {
+	test('Should_returns_ok_one_by_terminal', async () => {
 
 		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2 } }
 
@@ -165,5 +179,42 @@ describe('Product Suite', () => {
 
 		expect(result).toStrictEqual(badRequest())
 		expect(result.statusCode).toBe(400)
+	})
+
+	test('Should_returns_ok_creating_all', async () => {
+
+		mDynamoDb.get = jest.fn().mockImplementation(() => {
+			return {
+				promise() {
+					return Promise.resolve({
+						extern_id: '3333',
+						stock: 4,
+						price: 89,
+						name: 'Pizza 4 Queijos'
+					})
+				}
+			}
+		})
+
+		let arr = [ {
+			extern_id: '3333',
+			stock: 4,
+			price: 89,
+			name: 'Pizza 4 Queijos'
+		},{
+			extern_id: '4444',
+			stock: 4,
+			price: 89,
+			name: 'Pizza 4 Queijos'
+		}]
+
+		const request = { httpMethod: 'POST', queryStringParameters: { terminal_id: '222' }, body: JSON.stringify(arr) }
+
+		let result = await product(request)
+
+		expect(JSON.parse(result.body).errors.length).toBe(0)
+		expect(JSON.parse(result.body).success.length).toBe(2)
+		expect(JSON.parse(result.body).status).toBe('success')
+		expect(result.statusCode).toBe(200)
 	})
 })

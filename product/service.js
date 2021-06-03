@@ -37,11 +37,11 @@ const getByTerminalId = async ({ terminal_id }) => {
 	}
 }
 
-const getByExternId = async ({ terminal_id, external_id }) => {
+const getByExternId = async ({ terminal_id, extern_id }) => {
 	const params = {
 		TableName : TABLE_NAME,
 		Key:{
-			'extern_id': external_id,
+			'extern_id': extern_id,
 			'terminal_id': terminal_id
 		}
 	}
