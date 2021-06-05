@@ -100,4 +100,4 @@ const delete_r = async ({ terminal_id, extern_id }) => {
 	}
 }
 
-module.exports = { get, post, remove, delete_r }
+module.exports = { get, post, delete_r }

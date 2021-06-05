@@ -1,5 +1,6 @@
 const { Validator } = require('node-input-validator')
 const errorFactory = require('error-factory')
+const moment = require('moment-timezone')
 
 const ProductError = errorFactory('ProductSchemaError', [ 'message', 'details' ])
 
@@ -23,7 +24,6 @@ const validate = async product => {
 }
 
 const setProduct = (table, product) => {
-
 	return {
 		TableName: table,
 		Item: {
@@ -31,25 +31,26 @@ const setProduct = (table, product) => {
 			'extern_id': product.extern_id,
 			'stock': product.stock,
 			'price': product.price,
-			'name': product.name
+			'name': product.name,
+			'create_date': moment.tz('America/Sao_Paulo').format(),
+			'update_date':  moment.tz('America/Sao_Paulo').format()
 		}
 	}
-    
 }
 
 const setUpdateProduct = (table, product) => {
-
 	return {
 		TableName: table,
 		Key:{
 			'extern_id': product.extern_id,
 			'terminal_id':  product.terminal_id
 		},
-		UpdateExpression: 'set stock = :s, price=:p, name=:n',
+		UpdateExpression: 'set stock = :s, price=:p, name=:n, update_date=:d',
 		ExpressionAttributeValues:{
 			':s':product.stock,
 			':p':product.price,
-			':n':product.name
+			':n':product.name,
+			':d': moment.tz('America/Sao_Paulo').format()
 		},
 		ReturnValues:'UPDATED_NEW'
 	}

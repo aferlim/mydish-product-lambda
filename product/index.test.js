@@ -57,13 +57,13 @@ const mDynamoDb = new AWS.DynamoDB.DocumentClient()
 
 describe('Product Suite', () => {
 
-	//beforeAll(() => { console.log = jest.fn() })
+	beforeAll(() => { console.log = jest.fn() })
 
 	afterAll(() => {
 		jest.resetAllMocks()
 	})
 
-	test('Should_returns_notfound_generic_get', async () => {
+	test('Should_returns_notfound_invalid_get', async () => {
 		const request = { httpMethod: 'GET', queryStringParameters: null }
 
 		let result = await product(request)
@@ -320,7 +320,7 @@ describe('Product Suite', () => {
 				}
 			}
 		})
-		
+
 		mDynamoDb.delete = jest.fn().mockImplementation(() => ({ }))
 
 		const request = { httpMethod: 'DELETE', queryStringParameters: { terminal_id: '222', extern_id: '222' } }

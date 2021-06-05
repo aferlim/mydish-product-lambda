@@ -1,14 +1,15 @@
-
-const { get, post, delete_r } = require('./handler')
+const { get, post, delete_r, put } = require('./handler')
 const { ok, badRequest } = require('../response')
 
-const product = async event =>{
+const terminal = async event =>{
 
 	switch (event.httpMethod) {
 	case 'GET':
 		return await get(event.queryStringParameters)
 	case 'POST':
 		return await post(event)
+	case 'PUT':
+		return await put(event)
 	case 'DELETE':
 		return await delete_r(event.queryStringParameters)
 	case 'OPTIONS':
@@ -19,4 +20,4 @@ const product = async event =>{
 
 }
 
-module.exports = { product }
+module.exports = { terminal }

@@ -17,6 +17,8 @@
   "dependencies": {
     "aws-sdk": "^2.919.0",
     "error-factory": "^0.1.6",
-    "node-input-validator": "^4.4.1"
+    "moment-timezone": "^0.5.33",
+    "node-input-validator": "^4.4.1",
+    "uuid": "^8.3.2"
   }
 }
