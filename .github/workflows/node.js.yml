@@ -28,17 +28,26 @@ jobs:
     - run: npm install
     - run: npm test
     - run: npm run build --if-present
-    - uses: romeovs/lcov-reporter-action@v0.2.16
+    #- uses: romeovs/lcov-reporter-action@v0.2.16
     # - name: Coverage collect
     #   with:
     #     lcov-file: ./coverage/lcov.info
-    - uses: actions/checkout@v1
-    - name: AWS Lambda Product
-      uses: appleboy/lambda-action@master
+    # - uses: actions/checkout@v1
+    # - name: AWS Lambda Product
+    #   uses: appleboy/lambda-action@master
+    #   with:
+    #     aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     aws_region: ${{ secrets.AWS_REGION }}
+    #     function_name: mydish-products
+    #     zip_file: lambda.zip
+    #     dry_run: true
+    - name: AWS Lambda FunctionCode Update
+      uses: taotao2345/aws-lambda-updatecode@v1.0.0
+      env:
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: ${{ secrets.AWS_REGION }}
-        function_name: mydish-products
-        zip_file: lambda.zip
-        dry_run: true
+        function_name: TargetFunctionName
+        zip_file: path/to/file.zip
