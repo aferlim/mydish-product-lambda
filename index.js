@@ -1,12 +1,7 @@
 
-const { ok } = require('./response')
-
-const handler = async event => {
-	if (event.httpMethod === 'OPTIONS') {
-		return ok
-	}
-}
+const { product } = require('./product/index')
+const { terminal } = require('./terminal/index')
 
 module.exports = {
-	handler
+	product, terminal
 }
