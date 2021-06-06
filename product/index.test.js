@@ -177,7 +177,40 @@ describe('Product Suite', () => {
 		expect(result.statusCode).toBe(400)
 	})
 
+	test('Should_returns_a_badrequest_post_non_exists_terminal_id', async () => {
+
+		mDynamoDb.get = jest.fn().mockImplementation(() => ({ promise: () => ( Promise.resolve({}) ) }))
+
+		const products = [{
+			terminal_id: '3333',
+			extern_id: '3333',
+			stock: 4,
+			price: 89,
+			name: 'Pizza 4 Queijos',
+			error: 'invalid teminal'
+		}]
+		const request = { httpMethod: 'POST', queryStringParameters: { terminal_id: '222' }, body: JSON.stringify(products) }
+
+		let result = await product(request)
+
+		expect(JSON.parse(result.body).errors.length).toBe(1)
+		expect(result.statusCode).toBe(400)
+	})
+
 	test('Should_returns_a_badrequest_post_invalid_validation_all_errors', async () => {
+
+		mDynamoDb.get = jest.fn().mockImplementation((param) => {
+			return {
+				promise() {
+					if (param.TableName == 'product') {
+						return Promise.resolve({})
+					} else {
+						return Promise.resolve({id: '1', param })
+					}
+					
+				}
+			}
+		})
 
 		let arr = [ {
 			id: '3333',
@@ -195,13 +228,24 @@ describe('Product Suite', () => {
 
 		let result = await product(request)
 
-		expect(result).toStrictEqual(badRequest())
+		expect(JSON.parse(result.body).errors.length).toBe(2)
 		expect(result.statusCode).toBe(400)
 	})
 
 	test('Should_returns_ok_creating_all', async () => {
 
-		mDynamoDb.get = jest.fn().mockImplementation(() => ({ promise: () => ( Promise.resolve({}) ) }))
+		mDynamoDb.get = jest.fn().mockImplementation((param) => {
+			return {
+				promise() {
+					if (param.TableName == 'product') {
+						return Promise.resolve({})
+					} else {
+						return Promise.resolve({id: '1', param })
+					}
+					
+				}
+			}
+		})
 
 		let arr = [ {
 			extern_id: '3333',

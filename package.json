@@ -6,7 +6,8 @@
   "author": "andre lima",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node app.js"
   },
   "devDependencies": {
     "eslint": "^7.27.0",

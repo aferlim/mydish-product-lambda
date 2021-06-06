@@ -1,6 +1,8 @@
 const { notFound, ok, badRequest, badRequestWithMessage } = require('../response')
 const { getAll, getByExternId, getByTerminalId, insert, update, remove } = require('./service')
 
+const terminalService = require('../terminal/service')
+
 const { validate } = require('./schema')
 
 const get = async query => {
@@ -38,30 +40,38 @@ const post = async ({ body, queryStringParameters  }) => {
 
 			if(await validate(prod_item)) {
 				
-				let exists = await getByExternId({ terminal_id: terminal_id, extern_id: prod_item.extern_id })
+				let valid_terminal = await terminalService.getByTerminalId({ terminal_id })
 
-				if (exists && Object.keys(exists).length) {
+				if (valid_terminal && Object.keys(valid_terminal).length) {
 
-					await update(prod_item)
-					response_body.updated.push(prod_item)
+					let exists = await getByExternId({ terminal_id: terminal_id, extern_id: prod_item.extern_id })
 
+					if (exists && Object.keys(exists).length) {
+
+						await update(prod_item)
+						response_body.updated.push(prod_item)
+
+					} else {
+
+						await insert(prod_item)
+						response_body.created.push(prod_item)
+
+					}
 				} else {
-
-					await insert(prod_item)
-					response_body.created.push(prod_item)
-
+					response_body.errors.push({ err: 'invalid teminal', ...prod_item })
 				}
+				
 			}
 		} catch (error) {
 			console.log(error)
-			response_body.errors.push(prod_item)
+			response_body.errors.push({ err: error, ...prod_item })
 		}
 	}))
 
 	const status = (response_body.created.length || response_body.updated.length) ? response_body.errors.length ? 'processed with errors' : 'success' : 'error'
 
 	if(status == 'error')
-		return badRequest()
+		return badRequestWithMessage({ ...response_body, status: status })
 
 	return ok({ ...response_body, status: status })
 }
