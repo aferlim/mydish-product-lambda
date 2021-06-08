@@ -214,7 +214,7 @@ describe('Terminal Suite', () => {
 
 		let payload = {
 			terminal_id: 'valid',
-			status: true,
+			active: true,
 			name: 'Pizza 4 Queijos'
 		}
 

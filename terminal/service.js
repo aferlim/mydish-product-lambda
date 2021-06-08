@@ -18,6 +18,11 @@ const getAll = async () => {
 }
 
 const getByTerminalId = async ({ terminal_id }) => {
+
+	if(!terminal_id) {
+		throw errorF('getByTerminalId - invalid parameter terminal_id')
+	}
+
 	const params = {
 		TableName : TABLE_NAME,
 		Key:{

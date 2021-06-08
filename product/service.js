@@ -19,6 +19,11 @@ const getAll = async () => {
 }
 
 const getByTerminalId = async ({ terminal_id }) => {
+
+	if(!terminal_id) {
+		throw errorF('getByTerminalId - invalid parameter terminal_id')
+	}
+
 	const params = {
 		TableName : TABLE_NAME,
 		KeyConditionExpression: '#terminal = :input',
@@ -38,6 +43,11 @@ const getByTerminalId = async ({ terminal_id }) => {
 }
 
 const getByExternId = async ({ terminal_id, extern_id }) => {
+
+	if(!terminal_id || !extern_id) {
+		throw errorF('getByTerminalId - invalid parameter terminal_id / extern_id')
+	}
+
 	const params = {
 		TableName : TABLE_NAME,
 		Key:{
