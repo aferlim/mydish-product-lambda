@@ -15,6 +15,7 @@ const terminal = async event =>{
 	case 'OPTIONS':
 		return ok()
 	default:
+		console.log(event)
 		return badRequest()
 	}
 
