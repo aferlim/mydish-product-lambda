@@ -42,7 +42,16 @@ jobs:
     #     function_name: mydish-products
     #     zip_file: lambda.zip
     #     dry_run: true
-    - name: AWS Lambda FunctionCode Update
+    - name: AWS Lambda Product
+      uses: taotao2345/aws-lambda-updatecode@v1.0.0
+      env:
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      with:
+        function_name: mydish-products
+        zip_file: lambda.zip
+    - name: AWS Lambda Terminal
       uses: taotao2345/aws-lambda-updatecode@v1.0.0
       env:
         AWS_REGION: ${{ secrets.AWS_REGION }}

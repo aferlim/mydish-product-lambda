@@ -29,6 +29,7 @@ const setTerminal = (table, terminal) => {
 			'terminal_id': terminal.terminal_id,
 			'status': terminal.status,
 			'name': terminal.name,
+			'client_ip': terminal.client_ip,
 			'create_date': moment.tz('America/Sao_Paulo').format(),
 			'update_date':  moment.tz('America/Sao_Paulo').format()
 		}
@@ -36,19 +37,19 @@ const setTerminal = (table, terminal) => {
     
 }
 
-const setUpdateTerminal = (table, product) => {
+const setUpdateTerminal = (table, terminal) => {
 
 	return {
 		TableName: table,
 		Key:{
-			'extern_id': product.extern_id,
-			'terminal_id':  product.terminal_id
+			'extern_id': terminal.extern_id,
 		},
-		UpdateExpression: 'set status = :s, name=:n, update_date=:d',
+		UpdateExpression: 'set status = :s, name=:n, update_date=:d, client_ip=:cl_ip',
 		ExpressionAttributeValues:{
-			':s': product.status,
-			':n': product.name,
-			':d': moment.tz('America/Sao_Paulo').format()
+			':s': terminal.status,
+			':n': terminal.name,
+			':d': moment.tz('America/Sao_Paulo').format(),
+			':cl_ip': terminal.client_ip
 		},
 		ReturnValues:'UPDATED_NEW'
 	}
