@@ -10,10 +10,10 @@ const get = async query => {
 	if(query && query.terminal_id){
 
 		if(query.extern_id){
-			return await genericReadHandler({ ...query })(getByExternId)
+			return await genericReadHandler(query)(getByExternId)
 		}
 
-		return await genericReadHandler({ ...query })(getByTerminalId)
+		return await genericReadHandler(query)(getByTerminalId)
 	}
 
 	if(query && query.type && query.type === 'all') {

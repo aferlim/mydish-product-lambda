@@ -140,7 +140,7 @@ describe('Terminal Suite', () => {
 	test('Should_returns_a_badrequest_POST_invalid_payload', async () => {
 
 		let payload = {
-			status: 4, // invalid, true
+			active: 4, // invalid, true
 			name: 'Pizza 4 Queijos'
 		}
 
@@ -157,7 +157,7 @@ describe('Terminal Suite', () => {
 		mDynamoDb.get = jest.fn().mockImplementation(() => ({ promise: () => ( Promise.resolve({}) ) }))
 
 		let payload = {
-			status: true,
+			active: true,
 			name: 'Pizza 4 Queijos'
 		}
 
@@ -185,7 +185,7 @@ describe('Terminal Suite', () => {
 
 		let payload = {
 			terminal_id: 'valid',
-			status: 4, //invalid
+			active: 4, //invalid
 			name: 'Pizza 4 Queijos'
 		}
 

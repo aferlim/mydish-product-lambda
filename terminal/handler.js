@@ -8,7 +8,7 @@ const { validate } = require('./schema')
 const get = async query => {
 
 	if(query && query.terminal_id){
-		return await genericReadHandler({ ...query })(getByTerminalId)
+		return await genericReadHandler(query)(getByTerminalId)
 	}
 
 	if(query && query.type && query.type === 'all') {

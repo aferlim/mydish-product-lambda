@@ -6,7 +6,7 @@ const TerminalError = errorFactory('TerminalSchemaError', [ 'message', 'details'
 
 const validationSchema = {
 	terminal_id: 'required',
-	status: 'required|boolean',
+	active: 'required|boolean',
 	name: 'required'
 }
 
@@ -27,8 +27,8 @@ const setTerminal = (table, terminal) => {
 		TableName: table,
 		Item: {
 			'terminal_id': terminal.terminal_id,
-			'state_id': terminal.status ? 1 : 0,
-			'status': terminal.status,
+			'state_id': terminal.active ? 1 : 0,
+			'active': terminal.active,
 			'name': terminal.name,
 			'client_ip': terminal.client_ip,
 			'create_date': moment.tz('America/Sao_Paulo').format(),
@@ -45,13 +45,13 @@ const setUpdateTerminal = (table, terminal) => {
 		Key:{
 			'extern_id': terminal.extern_id,
 		},
-		UpdateExpression: 'set status = :s, name=:n, update_date=:d, client_ip=:cl_ip, state_id=:sta',
+		UpdateExpression: 'set active = :s, name=:n, update_date=:d, client_ip=:cl_ip, state_id=:sti',
 		ExpressionAttributeValues:{
-			':s': terminal.status,
+			':s': terminal.active,
+			':sti': terminal.active ? 1 : 0,
 			':n': terminal.name,
 			':d': moment.tz('America/Sao_Paulo').format(),
-			':cl_ip': terminal.client_ip,
-			':sta': terminal.status ? 1 : 0
+			':cl_ip': terminal.client_ip
 		},
 		ReturnValues:'UPDATED_NEW'
 	}
