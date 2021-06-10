@@ -43,22 +43,22 @@ const setUpdateTerminal = (table, terminal) => {
 	return {
 		TableName: table,
 		Key:{
-			'extern_id': terminal.extern_id,
+			'terminal_id': terminal.terminal_id,
 		},
 		UpdateExpression: 'set #active = :s, #name=:n, #update_date=:d, #client_ip=:cl_ip, #state_id=:sti',
 		ExpressionAttributeNames: {
-			'#name': 'name',
 			'#active': 'active',
+			'#name': 'name',
 			'#update_date': 'update_date',
 			'#client_ip': 'client_ip',
 			'#state_id': 'state_id'
 		},
 		ExpressionAttributeValues:{
 			':s': terminal.active,
-			':sti': terminal.active ? 1 : 0,
 			':n': terminal.name,
+			':cl_ip': terminal.client_ip,
 			':d': moment.tz('America/Sao_Paulo').format(),
-			':cl_ip': terminal.client_ip
+			':sti': terminal.active ? 1 : 0
 		},
 		ReturnValues:'UPDATED_NEW'
 	}
