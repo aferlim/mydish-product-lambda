@@ -25,7 +25,7 @@ const get = async query => {
 
 const post = async ({ body, queryStringParameters  }) => {
 	
-	const { terminal_id } = queryStringParameters
+	const { terminal_id } = queryStringParameters || { terminal_id: null }
 	const products = body ? JSON.parse(body) : null
 
 	if (!products || !Array.isArray(products) || !terminal_id) {
