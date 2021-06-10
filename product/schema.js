@@ -45,7 +45,13 @@ const setUpdateProduct = (table, product) => {
 			'extern_id': product.extern_id,
 			'terminal_id':  product.terminal_id
 		},
-		UpdateExpression: 'set stock = :s, price=:p, name=:n, update_date=:d',
+		UpdateExpression: 'set #stock = :s, #price=:p, #name=:n, #update_date=:d',
+		ExpressionAttributeNames: {
+			'#name': 'name',
+			'#stock': 'stock',
+			'#update_date': 'update_date',
+			'#price': 'price'
+		},
 		ExpressionAttributeValues:{
 			':s':product.stock,
 			':p':product.price,

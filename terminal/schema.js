@@ -45,7 +45,14 @@ const setUpdateTerminal = (table, terminal) => {
 		Key:{
 			'extern_id': terminal.extern_id,
 		},
-		UpdateExpression: 'set active = :s, name=:n, update_date=:d, client_ip=:cl_ip, state_id=:sti',
+		UpdateExpression: 'set #active = :s, #name=:n, #update_date=:d, #client_ip=:cl_ip, #state_id=:sti',
+		ExpressionAttributeNames: {
+			'#name': 'name',
+			'#active': 'active',
+			'#update_date': 'update_date',
+			'#client_ip': 'client_ip',
+			'#state_id': 'state_id'
+		},
 		ExpressionAttributeValues:{
 			':s': terminal.active,
 			':sti': terminal.active ? 1 : 0,
