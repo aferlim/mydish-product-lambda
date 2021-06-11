@@ -24,6 +24,10 @@ const getByTerminalId = async ({ terminal_id }) => {
 		throw errorF('getByTerminalId - invalid parameter terminal_id')
 	}
 
+	if(typeof terminal_id != 'string') {
+		throw errorF('getByTerminalId - terminal_id must be string')
+	}
+
 	const params = {
 		TableName : TABLE_NAME,
 		KeyConditionExpression: '#terminalid = :input',
@@ -91,12 +95,12 @@ const update = async product => {
 	}
 }
 
-const remove = async (extern_id, terminal_id) => {
+const remove = async (terminal_id, extern_id) => {
 	const removeParams = {
 		TableName : TABLE_NAME,
 		Key:{
-			'extern_id': extern_id,
-			'terminal_id': terminal_id
+			'terminal_id': terminal_id,
+			'extern_id': extern_id
 		}
 	}
 
