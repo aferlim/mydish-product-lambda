@@ -26,7 +26,7 @@ const getByTerminalId = async ({ terminal_id }) => {
 
 	const params = {
 		TableName : TABLE_NAME,
-		KeyConditionExpression: '#terminal = :input',
+		KeyConditionExpression: '#terminalid = :input',
 		ExpressionAttributeNames:{
 			'#terminalid': 'terminal_id'
 		},
