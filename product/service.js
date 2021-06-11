@@ -59,7 +59,7 @@ const getByExternId = async ({ terminal_id, extern_id }) => {
 	try {
 		return await dynamoDb.get(params).promise()
 	} catch (error) {
-		throw errorF(`getByExternId - ${error.message}`)
+		throw errorF(`getByExternId - ${error.message} - terminal_id : ${terminal_id} - extern_id : ${extern_id}`)
 	}
 }
 
