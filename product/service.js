@@ -44,8 +44,12 @@ const getByTerminalId = async ({ terminal_id }) => {
 
 const getByExternId = async ({ terminal_id, extern_id }) => {
 
-	if(!terminal_id || !extern_id) {
+	if(!terminal_id || !extern_id || isNaN(extern_id)) {
 		throw errorF('getByTerminalId - invalid parameter terminal_id / extern_id')
+	}
+
+	if(isNaN(extern_id)) {
+		throw errorF('getByTerminalId - extern_id is not a number')
 	}
 
 	const params = {
@@ -59,7 +63,7 @@ const getByExternId = async ({ terminal_id, extern_id }) => {
 	try {
 		return await dynamoDb.get(params).promise()
 	} catch (error) {
-		throw errorF(`getByExternId - ${error.message} - terminal_id : ${terminal_id} - extern_id : ${extern_id}`)
+		throw errorF(`getByExternId - ${error.message}`)
 	}
 }
 
