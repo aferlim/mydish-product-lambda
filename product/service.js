@@ -44,12 +44,16 @@ const getByTerminalId = async ({ terminal_id }) => {
 
 const getByExternId = async ({ terminal_id, extern_id }) => {
 
-	if(!terminal_id || !extern_id || isNaN(extern_id)) {
+	if(!terminal_id || !extern_id) {
 		throw errorF('getByTerminalId - invalid parameter terminal_id / extern_id')
 	}
 
-	if(isNaN(extern_id)) {
-		throw errorF('getByTerminalId - extern_id is not a number')
+	if(typeof terminal_id != 'string') {
+		throw errorF('getByTerminalId - terminal_id must be string')
+	}
+
+	if(typeof extern_id != 'string') {
+		throw errorF('getByTerminalId - extern_id must be string')
 	}
 
 	const params = {

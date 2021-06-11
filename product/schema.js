@@ -5,11 +5,11 @@ const moment = require('moment-timezone')
 const ProductError = errorFactory('ProductSchemaError', [ 'message', 'details' ])
 
 const validationSchema = {
-	terminal_id: 'required',
-	extern_id: 'required',
-	stock: 'required',
-	price: 'required',
-	name: 'required'
+	terminal_id: 'required|string',
+	extern_id: 'required|string',
+	stock: 'required|integer',
+	price: 'required|decimal',
+	name: 'required|string'
 }
 
 const validate = async product => {

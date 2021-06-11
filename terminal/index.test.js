@@ -94,7 +94,7 @@ describe('Terminal Suite', () => {
 
 	test('Should_returns_ok_one', async () => {
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2' } }
 
 		let result = await terminal(request)
 
@@ -108,7 +108,7 @@ describe('Terminal Suite', () => {
 
 		mDynamoDb.get = jest.fn().mockImplementation(() => ({ promise: () => (Promise.resolve({})) }))
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2' } }
 
 		let result = await terminal(request)
 
@@ -119,7 +119,7 @@ describe('Terminal Suite', () => {
 
 		mDynamoDb.get.mockReturnValue(null)
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2' } }
 
 		let result = await terminal(request)
 

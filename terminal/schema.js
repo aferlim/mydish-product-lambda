@@ -5,9 +5,9 @@ const moment = require('moment-timezone')
 const TerminalError = errorFactory('TerminalSchemaError', [ 'message', 'details' ])
 
 const validationSchema = {
-	terminal_id: 'required',
+	terminal_id: 'required|string',
 	active: 'required|boolean',
-	name: 'required'
+	name: 'required|string'
 }
 
 const validate = async terminal => {

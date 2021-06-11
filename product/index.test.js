@@ -94,7 +94,7 @@ describe('Product Suite', () => {
 
 	test('Should_returns_ok_one_by_external', async () => {
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2, extern_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2', extern_id: '2' } }
 
 		let result = await product(request)
 
@@ -108,7 +108,7 @@ describe('Product Suite', () => {
 
 		mDynamoDb.get.mockReturnValue(null)
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2, extern_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2', extern_id: '2' } }
 
 		let result = await product(request)
 
@@ -120,7 +120,7 @@ describe('Product Suite', () => {
 
 		mDynamoDb.get = jest.fn().mockImplementation(() => ({ promise: () => (Promise.resolve({})) }))
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2, extern_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2', extern_id: '2' } }
 
 		let result = await product(request)
 
@@ -129,7 +129,7 @@ describe('Product Suite', () => {
 
 	test('Should_returns_ok_one_by_terminal', async () => {
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2' } }
 
 		let result = await product(request)
 
@@ -143,7 +143,7 @@ describe('Product Suite', () => {
 
 		mDynamoDb.query.mockReturnValue(null)
 
-		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: 2 } }
+		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2' } }
 
 		let result = await product(request)
 
@@ -167,7 +167,7 @@ describe('Product Suite', () => {
 			terminal_id: '3333',
 			extern_id: '3333',
 			stock: 4,
-			price: 89,
+			price: 89.0,
 			name: 'Pizza 4 Queijos'
 		}]) }
 
@@ -185,7 +185,7 @@ describe('Product Suite', () => {
 			terminal_id: '3333',
 			extern_id: '3333',
 			stock: 4,
-			price: 89,
+			price: 89.8,
 			name: 'Pizza 4 Queijos',
 			error: 'invalid teminal'
 		}]
@@ -215,7 +215,7 @@ describe('Product Suite', () => {
 		let arr = [ {
 			id: '3333',
 			stock: 4,
-			price: 89,
+			price: 89.7,
 			_name: 'Pizza 4 Queijos'
 		},{
 			id: '4444',
@@ -255,7 +255,7 @@ describe('Product Suite', () => {
 		},{
 			extern_id: '4444',
 			stock: 4,
-			price: 89,
+			price: 89.9,
 			name: 'Pizza 4 Queijos'
 		}]
 
@@ -324,7 +324,7 @@ describe('Product Suite', () => {
 					return Promise.resolve({
 						extern_id: '222',
 						stock: 4,
-						price: 89,
+						price: 89.0,
 						name: 'Pizza 4 Queijos'
 					})
 				}
@@ -358,7 +358,7 @@ describe('Product Suite', () => {
 					return Promise.resolve({
 						extern_id: '222',
 						stock: 4,
-						price: 89,
+						price: 89.0,
 						name: 'Pizza 4 Queijos'
 					})
 				}

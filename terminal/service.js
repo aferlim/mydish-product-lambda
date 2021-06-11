@@ -23,6 +23,10 @@ const getByTerminalId = async ({ terminal_id }) => {
 		throw errorF('getByTerminalId - invalid parameter terminal_id')
 	}
 
+	if(typeof terminal_id != 'string') {
+		throw errorF('getByTerminalId - terminal_id must be string')
+	}
+
 	const params = {
 		TableName : TABLE_NAME,
 		Key:{
