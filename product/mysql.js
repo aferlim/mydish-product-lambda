@@ -28,15 +28,13 @@ const connect = () => {
 
 const getCompany = (terminal_id, callback) => {
 	const conn = connect()
-	const [ rows ] = conn.query('SELECT id_empresa, user_id FROM ws_empresa where pdv_terminal_id = ?;', [ terminal_id ], (error, results, fields) => {
+	conn.query('SELECT id_empresa, user_id FROM ws_empresa where pdv_terminal_id = ?;', [ terminal_id ], (error, results, fields) => {
 
 		if (error) 
 			throw baseError(`Error on select - ${error.message}`)
 
 		callback(results, fields)
 	})
-
-	return rows
 }
 
 const testMySql = () => {
