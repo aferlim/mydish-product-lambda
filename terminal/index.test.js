@@ -66,7 +66,7 @@ describe('Terminal Suite', () => {
 	test('Should_returns_notfound_invalid_get', async () => {
 		const request = { httpMethod: 'GET', queryStringParameters: null }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result.statusCode).toBe(404)
 	})
@@ -75,7 +75,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'GET', queryStringParameters: {type: 'all'} }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result.statusCode === 200).toBeTruthy()
 	})
@@ -86,7 +86,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'GET', queryStringParameters: {type: 'all'} }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(badRequest())
 		expect(result.statusCode).toBe(400)
@@ -96,7 +96,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2' } }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		let should = ok({id: '1' })
 
@@ -110,7 +110,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2' } }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result.statusCode).toBe(404)
 	})
@@ -121,7 +121,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'GET', queryStringParameters: { terminal_id: '2' } }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(badRequest())
 		expect(result.statusCode).toBe(400)
@@ -131,7 +131,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'POST', body: null }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(badRequestWithMessage({ error: 'missing/wrong parameters'}))
 		expect(result.statusCode).toBe(400)
@@ -146,7 +146,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'POST', body: JSON.stringify(payload) }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(badRequest())
 		expect(result.statusCode).toBe(400)
@@ -163,7 +163,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'POST', body: JSON.stringify(payload) }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(JSON.parse(result.body)).not.toBeNull()
 		expect(JSON.parse(result.body).terminal_id).not.toBeNull()
@@ -175,7 +175,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'PUT', body: JSON.stringify({ name: 'vavlid' }) }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(badRequestWithMessage({ error: 'missing/wrong parameters'}))
 		expect(result.statusCode).toBe(400)
@@ -191,7 +191,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'PUT', body: JSON.stringify(payload) }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(badRequest())
 		expect(result.statusCode).toBe(400)
@@ -220,7 +220,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'POST', body: JSON.stringify(payload) }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(JSON.parse(result.body)).not.toBeNull()
 		expect(JSON.parse(result.body).terminal_id).not.toBeNull()
@@ -232,7 +232,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'DELETE', queryStringParameters: { x: '222' } }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(badRequestWithMessage({ error: 'missing/wrong parameters'}))
 		expect(result.statusCode).toBe(400)
@@ -255,7 +255,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'DELETE', queryStringParameters: { terminal_id: '222' } }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result.statusCode).toBe(200)
 	})
@@ -266,7 +266,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'DELETE', queryStringParameters: { terminal_id: '222' } }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(notFound())
 		expect(result.statusCode).toBe(404)
@@ -291,7 +291,7 @@ describe('Terminal Suite', () => {
 
 		const request = { httpMethod: 'DELETE', queryStringParameters: { terminal_id: '222' } }
 
-		let result = await terminal(request)
+		let result = await terminal(request, {})
 
 		expect(result).toStrictEqual(badRequest())
 		expect(result.statusCode).toBe(400)

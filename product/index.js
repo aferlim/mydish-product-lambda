@@ -2,7 +2,9 @@
 const { get, post, delete_r } = require('./handler')
 const { ok, badRequest } = require('../response')
 
-const product = async event =>{
+const product = async (event, context) =>{
+
+	context.callbackWaitsForEmptyEventLoop = false
 
 	switch (event.httpMethod) {
 	case 'GET':

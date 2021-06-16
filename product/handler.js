@@ -1,5 +1,6 @@
 const { notFound, ok, badRequest, badRequestWithMessage } = require('../response')
 const { getAll, getByExternId, getByTerminalId, insert, update, remove } = require('./service')
+const { getCompany, updateMany } = require('./mysql')
 
 const terminalService = require('../terminal/service')
 
@@ -57,6 +58,7 @@ const post = async ({ body, queryStringParameters  }) => {
 						response_body.created.push(prod_item)
 
 					}
+
 				} else {
 					response_body.errors.push({ err: 'invalid teminal', ...prod_item })
 				}
@@ -73,7 +75,28 @@ const post = async ({ body, queryStringParameters  }) => {
 	if(status == 'error')
 		return badRequestWithMessage({ ...response_body, status: status })
 
-	return ok({ ...response_body, status: status })
+	try {
+		getCompany(terminal_id, company => {
+
+			if(company && company[0]){
+
+				if(response_body.created.length)
+					updateMany(company[0].user_id, response_body.created, res => console.log(res))
+
+				if(response_body.updated.length)
+					updateMany(company[0].user_id, response_body.updated, res => console.log(res))
+			}
+
+		})
+
+		return ok({ ...response_body, status: status })
+
+	} catch (error) {
+
+		console.log(error)
+		return badRequest()
+
+	}
 }
 
 const genericReadHandler = params => async delegate => {
