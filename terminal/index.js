@@ -1,7 +1,9 @@
 const { get, post, delete_r, put } = require('./handler')
 const { ok, badRequest } = require('../response')
 
-const terminal = async event =>{
+const terminal = async (event, context) =>{
+
+	context.callbackWaitsForEmptyEventLoop = false
 
 	switch (event.httpMethod) {
 	case 'GET':
