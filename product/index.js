@@ -4,7 +4,7 @@ const { ok, badRequest } = require('../response')
 
 const product = async (event, context) =>{
 
-	context.callbackWaitsForEmptyEventLoop = false
+	context.callbackWaitsForEmptyEventLoop = true
 
 	switch (event.httpMethod) {
 	case 'GET':
