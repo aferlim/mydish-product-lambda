@@ -1,6 +1,6 @@
 const { notFound, ok, badRequest, badRequestWithMessage } = require('../response')
 const { getAll, getByExternId, getByTerminalId, insert, update, remove } = require('./service')
-const { getCompany, updateMany } = require('./mysql')
+const { getCompany, updateMany, endConnection } = require('./mysql')
 
 const terminalService = require('../terminal/service')
 
@@ -81,10 +81,21 @@ const post = async ({ body, queryStringParameters  }) => {
 			if(company && company[0]){
 
 				if(response_body.created.length)
-					updateMany(company[0].user_id, response_body.created, res => console.log(res))
+					updateMany(company[0].user_id, response_body.created, res => {
+
+						if(!response_body.updated.length)
+							endConnection()
+
+						console.log(res)
+					})
 
 				if(response_body.updated.length)
-					updateMany(company[0].user_id, response_body.updated, res => console.log(res))
+					updateMany(company[0].user_id, response_body.updated, res => {
+						
+						endConnection()
+
+						console.log(res)
+					})
 			}
 
 		})

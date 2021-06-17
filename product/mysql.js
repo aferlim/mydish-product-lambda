@@ -7,10 +7,12 @@ const connection_config = config.get('mysql')
 
 const baseError = errorFactory('MySQLServiceError', [ 'message', 'details' ])
 
+const _connection = null
+
 const connect = () => {
 
-	if(global.connection && global.connection.state !== 'disconnected')
-		return global.connection
+	if(_connection && _connection.state !== 'disconnected')
+		return _connection
     
 	var connection = mysql.createConnection(
 		{
@@ -22,7 +24,7 @@ const connect = () => {
 		})
 		
 	connection.connect()
-	global.connection = connection
+	_connection = connection
 	return connection
 }
 
@@ -67,8 +69,8 @@ const updateMany = (user_id, products, callback) => {
 
 		callback(results, fields)
 	})
-
 }
 
+const endConnection = () => _connection.end()
 
-module.exports = { testMySql, getCompany, updateMany }
+module.exports = { testMySql, getCompany, updateMany, endConnection }
