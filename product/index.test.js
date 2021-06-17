@@ -380,25 +380,25 @@ describe('Product Suite', () => {
 		expect(result.statusCode).toBe(400)
 	})
 
-	// test('TestMySQL', () => {
+	// test('TestMySQL', async () => {
 
 	// 	jest.useFakeTimers()
 
-	// 	const { testMySql, getCompany, updateMany } = require('../product/mysql')
+	// 	const { testMySql } = require('../product/mysql')
 
-	// 	testMySql()
+	// 	await testMySql()
 
-	// 	getCompany('88443077-90cd-481f-9ae7-b5a0b1acb735', (res, f) => {
+	// 	// getCompany('88443077-90cd-481f-9ae7-b5a0b1acb735', (res, f) => {
 			
-	// 		console.log(f)
+	// 	// 	console.log(f)
 
-	// 		if(res && res[0]){
-	// 			updateMany(res[0].user_id, [
-	// 				{ price: 30, stock: 10, extern_id: '123'}, 
-	// 				{ price: 30, stock: 10, extern_id: '1234'}], res => console.log(res) )
-	// 		}
+	// 	// 	if(res && res[0]){
+	// 	// 		updateMany(res[0].user_id, [
+	// 	// 			{ price: 30, stock: 10, extern_id: '123'}, 
+	// 	// 			{ price: 30, stock: 10, extern_id: '1234'}], res => console.log(res) )
+	// 	// 	}
 
-	// 	})
+	// 	// })
 
 	// 	expect(1).toBe(1)
 	// })

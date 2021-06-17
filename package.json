@@ -20,8 +20,8 @@
     "aws-sdk": "^2.919.0",
     "error-factory": "^0.1.6",
     "moment-timezone": "^0.5.33",
-    "mysql": "^2.18.1",
     "node-input-validator": "^4.4.1",
+    "serverless-mysql": "^1.5.4",
     "uuid": "^8.3.2"
   }
 }

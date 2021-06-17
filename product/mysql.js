@@ -1,4 +1,5 @@
-const mysql = require('mysql')
+const mysql = require('serverless-mysql')
+
 const sqlstring = require('sqlstring')
 const errorFactory = require('error-factory')
 
@@ -14,63 +15,78 @@ const connect = () => {
 	if(_connection && _connection.state !== 'disconnected')
 		return _connection
     
-	var connection = mysql.createConnection(
-		{
+	var connection = mysql({
+		config: {
 			host     : connection_config.host,
 			user     : connection_config.user,
 			password : connection_config.password,
 			database : connection_config.database,
 			multipleStatements: true,
-		})
+		}
+	})
 		
 	connection.connect()
 	_connection = connection
 	return connection
 }
 
-const getCompany = (terminal_id, callback) => {
-	const conn = connect()
-	conn.query('SELECT id_empresa, user_id FROM ws_empresa where pdv_terminal_id = ?;', [ terminal_id ], (error, results, fields) => {
+const getCompany = async (terminal_id) => {
 
-		if (error) 
-			throw baseError(`Error on select - ${error.message}`)
+	try {
+		
+		let conn = connect()
 
-		callback(results, fields)
-	})
+		let results = await conn.query('SELECT id_empresa, user_id FROM ws_empresa where pdv_terminal_id = ?;', [ terminal_id ])
+
+		return results
+
+	} catch (error) {
+		throw baseError(`Error on select - ${error.message}`)
+	}
+	
 }
 
-const testMySql = () => {
+const testMySql = async () => {
 	
-	const conn = connect()
-	conn.query('SELECT id_empresa, user_id FROM ws_empresa where pdv_terminal_id = ?;', ['88443077-90cd-481f-9ae7-b5a0b1acb735'], function (error, results, fields) {
-		if (error) throw error
+	try {
+		let conn = connect()
+
+		let results = await conn.query('SELECT id_empresa, user_id FROM ws_empresa where pdv_terminal_id = ?;', ['88443077-90cd-481f-9ae7-b5a0b1acb735'])
+
 		console.log('The solution is: ', results)
-		console.log(fields)
-	})
 
-}
-
-const updateMany = (user_id, products, callback) => {
+	} catch (error) {
+		throw baseError(`Error on select - ${error.message}`)
+	}
 	
-	const conn = connect()
-	let query = ''
 
-	products.forEach(product => {
-
-		let available = product.stock > 0 ? 1 : 0
-
-		query += sqlstring.format('UPDATE ws_itens SET disponivel = ?, preco_item = ?, extern_stock= ? where extern_id = ? AND user_id = ?;', 
-			[ available , product.price, product.stock, product.extern_id, user_id], true)
-	})
-
-	conn.query(query, (error, results, fields) => {
-		if (error) 
-			throw baseError(`Error on update - ${error.message}`)
-
-		callback(results, fields)
-	})
 }
 
-const endConnection = () => _connection.end()
+const updateMany = async (user_id, products) => {
+	
+	try {
+		const conn = connect()
+		let query = ''
+
+		products.forEach(product => {
+
+			let available = product.stock > 0 ? 1 : 0
+
+			query += sqlstring.format('UPDATE ws_itens SET disponivel = ?, preco_item = ?, extern_stock= ? where extern_id = ? AND user_id = ?;', 
+				[ available , product.price, product.stock, product.extern_id, user_id], true)
+		})
+
+		let results = await conn.query(query)
+
+		return results
+
+	} catch (error) {
+		throw baseError(`Error on Update - ${error.message}`)
+	}
+	
+}
+
+const endConnection = async () => await _connection.end()
 
 module.exports = { testMySql, getCompany, updateMany, endConnection }
+//module.exports = { getCompany, updateMany, endConnection }

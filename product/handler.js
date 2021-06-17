@@ -76,29 +76,30 @@ const post = async ({ body, queryStringParameters  }) => {
 		return badRequestWithMessage({ ...response_body, status: status })
 
 	try {
-		getCompany(terminal_id, company => {
 
-			if(company && company[0]){
+		let company = await getCompany(terminal_id)
 
-				if(response_body.created.length)
-					updateMany(company[0].user_id, response_body.created, res => {
+		if(company && company[0]){
 
-						if(!response_body.updated.length)
-							endConnection()
+			if(response_body.created.length) {
+				
+				let result_created = await updateMany(company[0].user_id, response_body.created)
+				
+				if(!response_body.updated.length)
+					await endConnection()
 
-						console.log(res)
-					})
-
-				if(response_body.updated.length)
-					updateMany(company[0].user_id, response_body.updated, res => {
-						
-						endConnection()
-
-						console.log(res)
-					})
+				console.log(result_created)
 			}
 
-		})
+			if(response_body.created.length) {
+				
+				let result_updatedd = await updateMany(company[0].user_id, response_body.updated)
+				
+				await endConnection()
+
+				console.log(result_updatedd)
+			}
+		}
 
 		return ok({ ...response_body, status: status })
 
