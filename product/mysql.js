@@ -7,7 +7,7 @@ const connection_config = config.get('mysql')
 
 const baseError = errorFactory('MySQLServiceError', [ 'message', 'details' ])
 
-const _connection = null
+let _connection = null
 
 const connect = () => {
 
