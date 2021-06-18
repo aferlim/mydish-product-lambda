@@ -91,7 +91,7 @@ const post = async ({ body, queryStringParameters  }) => {
 				console.log(result_created)
 			}
 
-			if(response_body.created.length) {
+			if(response_body.updated.length) {
 				
 				let result_updatedd = await updateMany(company[0].user_id, response_body.updated)
 				
